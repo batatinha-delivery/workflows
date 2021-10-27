@@ -7,7 +7,7 @@ on:
 
 jobs:
   call-workflow-1:
-    uses: batatinha-delivery/workflows/.github/workflows/teste.yml
+    uses: batatinha-delivery/workflows/.github/workflows/teste.yml@master
     with:
       username: ${{ github.event.inputs.logLevel }}
   another:
