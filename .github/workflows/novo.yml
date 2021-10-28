@@ -9,7 +9,7 @@ jobs:
   call-workflow-1:
     uses: batatinha-delivery/workflows/.github/workflows/teste.yml@master
     with:
-      username: ${{ github.event.inputs.logLevel }}
+      username: ${{ github.event.inputs.username }}
   another:
     runs-on: ubuntu-latest
     steps: 
