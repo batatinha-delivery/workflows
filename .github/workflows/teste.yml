@@ -13,4 +13,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo Exemplo de workflow compartilhado
-      - run: echo username -> ${{ inputs.username }}
+      - run: echo username -> ${{ inputs.username }} é o valor informado
