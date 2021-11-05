@@ -1,0 +1,27 @@
+name: Npm Lint
+
+on:
+  workflow_call:
+    inputs:
+      bump_type: 
+        type: string
+        default: minor
+        required: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Install Packages
+        run: yarn install
+      - name: Lint Action
+        uses: wearerequired/lint-action@v1.10.0
+        with:
+          eslint: true
+          prettier: true
