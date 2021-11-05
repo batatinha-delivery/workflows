@@ -2,6 +2,11 @@ name: Publish
 
 on:
   workflow_call:
+    inputs:
+      bump_type: 
+        type: string
+        default: minor
+        required: false
     secrets:
       NPM_DEPLOY_TOKEN:
         required: true
@@ -37,7 +42,7 @@ jobs:
 
       - name: Publish package
         run: |
-          lerna publish --yes --message "chore: Release new version"
+          lerna publish ${{ inputs.bump_type }} --yes --message "chore: Release new version" --conventional-commits
         env:
           GH_TOKEN: ${{ secrets.PAT_GITHUB }}
           GITHUB_TOKEN: ${{ secrets.PAT_GITHUB }}
