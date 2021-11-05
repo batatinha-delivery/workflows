@@ -1,15 +1,10 @@
-name: Npm Lint
+name: Npm check
 
 on:
   workflow_call:
-    inputs:
-      bump_type: 
-        type: string
-        default: minor
-        required: false
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
@@ -26,3 +21,5 @@ jobs:
           eslint: true
           prettier: true
           continue_on_error: false
+      - name: Test
+        run: yarn test
