@@ -28,4 +28,4 @@ jobs:
   sast-semgrep:
     runs-on: registry.gitlab.com/gitlab-org/security-products/analyzers/semgrep:2
     steps:
-      - run: /analyzer run
+      - run: /analyzer run``
