@@ -5,10 +5,8 @@ on:
     inputs:
       NPM_DEPLOY_TOKEN:
         required: true
-        type: string
       PAT_GITHUB:
         required: true
-        type: string
 
 jobs:
   build:
