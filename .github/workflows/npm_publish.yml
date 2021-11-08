@@ -42,8 +42,11 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_DEPLOY_TOKEN }}
       - name: Publish package
         run: |
-          lerna publish ${{ inputs.bump_type }} --yes --message "chore: Release new version" --conventional-commits
+          lerna publish ${{ inputs.bump_type }} --yes --message "chore: Release new version" --conventional-commits --no-push
         env:
           GH_TOKEN: ${{ secrets.PAT_GITHUB }}
           GITHUB_TOKEN: ${{ secrets.PAT_GITHUB }}
           NPM_TOKEN: ${{ secrets.NPM_DEPLOY_TOKEN }}
+      - name: Push
+        run: | 
+          git push --force --follow-tags --no-verify origin main
