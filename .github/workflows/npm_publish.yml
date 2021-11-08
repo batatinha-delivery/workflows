@@ -21,14 +21,10 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
-
-      - uses: webfactory/ssh-agent@v0.5.0
-        with:
-          ssh-private-key: ${{ secrets.GH_PAGES_DEPLOY }}
       - name: Configure CI Git User
         run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "gh-actions"
+          git config --global user.email "ezidiu@gmail.com"
+          git config --global user.name "everton.tavares"
         env:
           PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
 
@@ -48,6 +44,6 @@ jobs:
         run: |
           lerna publish ${{ inputs.bump_type }} --yes --message "chore: Release new version" --conventional-commits
         env:
-          # GH_TOKEN: ${{ secrets.PAT_GITHUB }}
-          # GITHUB_TOKEN: ${{ secrets.PAT_GITHUB }}
+          GH_TOKEN: ${{ secrets.PAT_GITHUB }}
+          GITHUB_TOKEN: ${{ secrets.PAT_GITHUB }}
           NPM_TOKEN: ${{ secrets.NPM_DEPLOY_TOKEN }}
