@@ -30,7 +30,7 @@ jobs:
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/$GITHUB_REPOSITORY
+          git remote set-url origin https://x-access-token:${PAT_GITHUB}@github.com/$GITHUB_REPOSITORY
         env:
           PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
           GITHUB_REPOSITORY: ${{inputs.GITHUB_REPOSITORY}}
