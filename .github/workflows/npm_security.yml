@@ -9,6 +9,12 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Install Packages
+        run: yarn install
       - name: nodejsscan scan
         id: njsscan
         uses: ajinabraham/njsscan-action@master
