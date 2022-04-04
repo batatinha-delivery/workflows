@@ -10,54 +10,42 @@ on:
     secrets:
       NPM_DEPLOY_TOKEN:
         required: true
-      PAT_GITHUB:
-        required: true
-      GH_PAGES_DEPLOY:
-        required: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
-          persist-credentials: false
-      - name: Configure CI Git User
-        run: |
-          echo "Configuring ${{ github.repository }}"
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${PAT_GITHUB}@github.com/${{ github.repository }}
-        env:
-          PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
-          GITHUB_REPOSITORY: ${{inputs.GITHUB_REPOSITORY}}
+          fetch-depth: 0
 
-      - name: Install Packages
-        run: yarn install
+      - name: Config Git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'yarn'
 
-      - name: Authenticate with Registry
-        run: |
-          yarn logout
-          echo "@batatinha-delivery:registry=https://registry.npmjs.org/" > .npmrc
-          echo "registry=https://registry.npmjs.org/" >> .npmrc
-          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
-          npm whoami
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_DEPLOY_TOKEN }}
-      - name: Publish package
-        run: |
-          lerna version ${{ inputs.bump_type }} --yes --conventional-commits --create-release github --message "chore(release): Release new version" --no-push
-          lerna publish from-package --yes
-        env:
-          GH_TOKEN: ${{ secrets.PAT_GITHUB }}
-          GITHUB_TOKEN: ${{ secrets.PAT_GITHUB }}
-          NODE_AUTH_TOKEN: ${{ secrets.PAT_GITHUB }}
-          NPM_TOKEN: ${{ secrets.NPM_DEPLOY_TOKEN }}
-      - name: Push
+      - name: Install
+        run: yarn --frozen-lockfile
+
+      - name: Release
         run: | 
-          git push --force --follow-tags --no-verify origin main
+          if [[ -f ".release-it.json" ]]; then
+            yarn release-it --ci ${{ inputs.bump_type }}
+          elif [[ -f "lerna.json" ]]; then
+            lerna version ${{ inputs.bump_type }} --yes --conventional-commits --create-release github --message "chore(release): Release new version" --no-push
+            lerna publish from-package --yes
+            git push --force --follow-tags --no-verify origin main
+          else
+            echo 'Missing .release-it.json or lerna.json configuration files.' ; exit 1; 
+          fi
         env:
-          GH_TOKEN: ${{ secrets.PAT_GITHUB }}
-          GITHUB_TOKEN: ${{ secrets.PAT_GITHUB }}
-          NODE_AUTH_TOKEN: ${{ secrets.PAT_GITHUB }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_DEPLOY_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
