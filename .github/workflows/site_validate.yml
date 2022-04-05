@@ -1,4 +1,4 @@
-name: Page deploy
+name: Validate
 
 on:
   workflow_call:
@@ -7,10 +7,8 @@ on:
         type: string
         default: ./website
         required: false
-
 jobs:
-  build:
-    name: Build
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,19 +29,3 @@ jobs:
       - name: Build website
         working-directory: ${{ inputs.directory }}
         run: yarn build
-
-      - name: Cache Build
-        uses: actions/cache@v3
-        with:
-          path: |
-            ./lib
-            ./example/build
-          key: build-${{ github.sha }}
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ${{ inputs.directory }}/build
-          user_name: github-actions[bot]
-          user_email: 41898282+github-actions[bot]@users.noreply.github.com
