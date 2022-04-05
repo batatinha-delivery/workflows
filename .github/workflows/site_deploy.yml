@@ -2,6 +2,11 @@ name: Page deploy
 
 on:
   workflow_call:
+    inputs:
+      directory: 
+        type: string
+        default: ./website
+        required: false
 
 jobs:
   build:
@@ -18,11 +23,11 @@ jobs:
           cache: 'yarn'
 
       - name: Install Website
-        working-directory: ./website
+        working-directory: ${{ inputs.directory }}
         run: yarn --frozen-lockfile
       
       - name: Build website
-        working-directory: ./website
+        working-directory: ${{ inputs.directory }}
         run: yarn build
 
       - name: Cache Build
@@ -37,6 +42,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./website/build
+          publish_dir: ${{ inputs.directory }}/build
           user_name: github-actions[bot]
           user_email: 41898282+github-actions[bot]@users.noreply.github.com
